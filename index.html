@@ -1,677 +1,483 @@
-<title>ORVION</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
-
-<style>
-  :root {
-    --bg: #FBFAF7;
-    --raised: #FFFFFF;
-    --ink: #14110D;
-    --ink-soft: #5F584E;
-    --ink-faint: #8F877B;
-    --accent: #C81E2C;
-    --cta-bg: #C81E2C;
-    --cta-bg-hover: #A8151F;
-    --cta-ink: #FFFFFF;
-    --line: rgba(20, 17, 13, 0.10);
-    --line-soft: rgba(20, 17, 13, 0.06);
-    --panel: #14110D;
-    --panel-ink: #FBFAF7;
-    --shadow: 0 1px 2px rgba(20, 17, 13, 0.04), 0 8px 24px rgba(20, 17, 13, 0.05);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #121110;
-      --raised: #1B1A18;
-      --ink: #F2EFE9;
-      --ink-soft: #A9A196;
-      --ink-faint: #6E675D;
-      --accent: #E5443C;
-      --line: rgba(242, 239, 233, 0.12);
-      --line-soft: rgba(242, 239, 233, 0.07);
-      --panel: #1B1A18;
-      --panel-ink: #F2EFE9;
-      --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.28);
-    }
-  }
-
-  :root[data-theme="dark"] {
-    --bg: #121110;
-    --raised: #1B1A18;
-    --ink: #F2EFE9;
-    --ink-soft: #A9A196;
-    --ink-faint: #6E675D;
-    --accent: #E5443C;
-    --line: rgba(242, 239, 233, 0.12);
-    --line-soft: rgba(242, 239, 233, 0.07);
-    --panel: #1B1A18;
-    --panel-ink: #F2EFE9;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.28);
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-  }
-
-  body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: 'Archivo', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 16px;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }
-
-  a { color: inherit; text-decoration: none; }
-
-  :focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
-    border-radius: 4px;
-  }
-
-  .wrap {
-    width: 100%;
-    max-width: 1060px;
-    margin: 0 auto;
-    padding: 0 20px;
-  }
-
-  /* ---------------- header ---------------- */
-
-  .sentinel { position: absolute; top: 0; height: 1px; width: 100%; }
-
-  header.bar {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
-    backdrop-filter: saturate(1.6) blur(12px);
-    -webkit-backdrop-filter: saturate(1.6) blur(12px);
-    border-bottom: 1px solid transparent;
-    transition: border-color 240ms ease;
-  }
-
-  header.bar.stuck { border-bottom-color: var(--line-soft); }
-
-  .bar-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    height: 74px;
-  }
-
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    min-width: 0;
-  }
-
-  /* recorte circular justo no símbolo, no estilo foto de perfil */
-  .mark {
-    border-radius: 50%;
-    background: #FFFFFF;
-    overflow: hidden;
-    flex-shrink: 0;
-    display: block;
-    box-shadow: 0 0 0 1px var(--line-soft);
-  }
-
-  /* A marca ocupa 59,8% x 61,1% do arquivo e fica 21px a direita e 7px acima
-     do centro. O scale deixa ela em ~78% do circulo e o translate corrige
-     esse desvio, para o anel nao encostar na borda. */
-  .mark img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: translate(-2.14%, 0.72%) scale(1.28);
-    transform-origin: 50% 50%;
-    display: block;
-  }
-
-  .mark-lg { width: 54px; height: 54px; }
-
-  .wordmark {
-    font-family: 'Unbounded', 'Archivo', sans-serif;
-    font-weight: 700;
-    font-size: 19px;
-    letter-spacing: 0.055em;
-    line-height: 1;
-    white-space: nowrap;
-  }
-
-  /* ---------------- buttons ---------------- */
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 9px;
-    white-space: nowrap;
-    font-family: 'Archivo', sans-serif;
-    font-weight: 600;
-    font-size: 15.5px;
-    letter-spacing: 0.005em;
-    padding: 14px 24px;
-    border-radius: 8px;
-    background: var(--cta-bg);
-    color: var(--cta-ink);
-    border: 1px solid transparent;
-    transition: background 200ms ease, transform 120ms ease;
-  }
-
-  .btn:hover { background: var(--cta-bg-hover); }
-  .btn:active { transform: scale(0.985); }
-
-  .btn svg { width: 17px; height: 17px; flex-shrink: 0; }
-
-  .btn-sm { padding: 10px 18px; font-size: 14.5px; }
-
-  .btn-quiet {
-    background: transparent;
-    color: var(--ink-soft);
-    border-color: var(--line);
-    font-weight: 500;
-  }
-
-  .btn-quiet:hover { background: transparent; color: var(--ink); border-color: var(--ink-faint); }
-
-  /* precisa vir depois de .btn, senao o display do botao vence a cascata */
-  .bar-cta { display: none; }
-
-  /* ---------------- hero ---------------- */
-
-  .hero { padding: 52px 0 64px; }
-
-  .hero-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 40px;
-    align-items: center;
-  }
-
-  .eyebrow {
-    display: inline-block;
-    font-size: 11.5px;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 20px;
-  }
-
-  h1 {
-    font-family: 'Unbounded', 'Archivo', sans-serif;
-    font-weight: 700;
-    font-size: clamp(28px, 6.2vw, 40px);
-    line-height: 1.14;
-    letter-spacing: -0.022em;
-    text-wrap: balance;
-    max-width: 19ch;
-    margin-bottom: 20px;
-  }
-
-  .lede {
-    font-size: clamp(15.5px, 4vw, 17.5px);
-    line-height: 1.58;
-    color: var(--ink-soft);
-    max-width: 46ch;
-    margin-bottom: 28px;
-  }
-
-  .cta-block { display: flex; flex-direction: column; gap: 12px; }
-
-  .cta-row { display: flex; flex-wrap: wrap; gap: 11px; }
-
-  .cta-note {
-    font-size: 13.5px;
-    line-height: 1.5;
-    color: var(--ink-faint);
-    max-width: 40ch;
-  }
-
-  /* ---------------- amostra de conversa ---------------- */
-
-  .chat {
-    background: var(--raised);
-    border: 1px solid var(--line-soft);
-    border-radius: 16px;
-    padding: 20px 18px 18px;
-    box-shadow: var(--shadow);
-    max-width: 440px;
-    width: 100%;
-  }
-
-  .chat-head {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    padding-bottom: 15px;
-    margin-bottom: 16px;
-    border-bottom: 1px solid var(--line-soft);
-  }
-
-  .mark-sm { width: 36px; height: 36px; }
-
-  .chat-who { min-width: 0; }
-
-  .chat-name {
-    font-size: 14.5px;
-    font-weight: 600;
-    line-height: 1.2;
-  }
-
-  .chat-status {
-    font-size: 12px;
-    color: var(--ink-faint);
-    line-height: 1.3;
-    margin-top: 2px;
-  }
-
-  .thread { display: flex; flex-direction: column; gap: 10px; }
-
-  .bubble {
-    font-size: 14.5px;
-    line-height: 1.5;
-    padding: 11px 14px;
-    border-radius: 14px;
-    max-width: 88%;
-    word-wrap: break-word;
-    overflow-wrap: anywhere;
-  }
-
-  .bubble.them {
-    align-self: flex-start;
-    background: var(--bg);
-    border: 1px solid var(--line-soft);
-    color: var(--ink-soft);
-    border-bottom-left-radius: 5px;
-  }
-
-  .bubble.orvi {
-    align-self: flex-end;
-    background: var(--ink);
-    color: var(--bg);
-    border-bottom-right-radius: 5px;
-  }
-
-  .chat-foot {
-    margin-top: 15px;
-    padding-top: 13px;
-    border-top: 1px solid var(--line-soft);
-    font-size: 12.5px;
-    color: var(--ink-faint);
-    line-height: 1.45;
-  }
-
-  /* ---------------- lista do que faz ---------------- */
-
-  .section { padding: 64px 0; }
-
-  h2 {
-    font-family: 'Unbounded', 'Archivo', sans-serif;
-    font-weight: 600;
-    font-size: clamp(22px, 5.4vw, 31px);
-    line-height: 1.2;
-    letter-spacing: -0.018em;
-    text-wrap: balance;
-    max-width: 20ch;
-    margin-bottom: 34px;
-  }
-
-  .rows { border-top: 1px solid var(--line-soft); }
-
-  .row {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 7px;
-    padding: 24px 0;
-    border-bottom: 1px solid var(--line-soft);
-  }
-
-  .row h3 {
-    font-family: 'Archivo', sans-serif;
-    font-size: 17px;
-    font-weight: 600;
-    letter-spacing: -0.005em;
-    line-height: 1.35;
-  }
-
-  .row p {
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--ink-soft);
-    max-width: 58ch;
-  }
-
-  /* ---------------- painel de posição ---------------- */
-
-  .panel {
-    background: var(--panel);
-    color: var(--panel-ink);
-    border-radius: 18px;
-    padding: clamp(30px, 6vw, 52px);
-    border: 1px solid var(--line-soft);
-  }
-
-  .panel h2 {
-    color: var(--panel-ink);
-    max-width: 22ch;
-    margin-bottom: 16px;
-  }
-
-  .panel p {
-    font-size: clamp(15px, 3.8vw, 16.5px);
-    line-height: 1.62;
-    opacity: 0.74;
-    max-width: 52ch;
-  }
-
-  /* ---------------- fechamento ---------------- */
-
-  .close { text-align: center; padding: 68px 0 76px; }
-
-  .close h2 { margin-left: auto; margin-right: auto; margin-bottom: 16px; }
-
-  .close .lede { margin-left: auto; margin-right: auto; margin-bottom: 26px; }
-
-  .close .cta-row { justify-content: center; }
-
-  .phone {
-    margin-top: 16px;
-    font-size: 14px;
-    color: var(--ink-faint);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.01em;
-  }
-
-  /* ---------------- rodapé ---------------- */
-
-  footer {
-    border-top: 1px solid var(--line-soft);
-    padding: 28px 0 40px;
-  }
-
-  .foot-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  .foot-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .mark-xs { width: 28px; height: 28px; }
-
-  .foot-word {
-    font-family: 'Unbounded', 'Archivo', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 0.055em;
-  }
-
-  .foot-tag {
-    font-size: 13px;
-    color: var(--ink-faint);
-    max-width: 42ch;
-  }
-
-  /* ---------------- barra fixa no celular ---------------- */
-
-  .dock {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 60;
-    padding: 11px 16px calc(11px + env(safe-area-inset-bottom));
-    background: color-mix(in srgb, var(--bg) 92%, transparent);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-top: 1px solid var(--line-soft);
-    transform: translateY(0);
-    transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  /* escondida apenas enquanto o topo esta visivel: se o JS falhar, o botao fica */
-  .dock.tucked { transform: translateY(110%); }
-  .dock .btn { width: 100%; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .dock { transition: none; }
-  }
-
-  /* ---------------- revelação no scroll ---------------- */
-
-  /* O conteudo e visivel por padrao. A ocultacao so entra em cena quando o JS
-     confirma que consegue anima-lo de volta, para que nenhuma falha deixe a
-     pagina em branco. */
-  .reveal-on [data-reveal] {
-    opacity: 0;
-    transform: translateY(12px);
-    transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
-                transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
-    transition-delay: calc(var(--i, 0) * 80ms);
-  }
-
-  .reveal-on [data-reveal].seen { opacity: 1; transform: none; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .reveal-on [data-reveal] { opacity: 1; transform: none; transition: none; }
-  }
-
-  /* ---------------- telas maiores ---------------- */
-
-  @media (min-width: 700px) {
-    .wrap { padding: 0 32px; }
-    .hero { padding: 68px 0 84px; }
-    .row { grid-template-columns: 300px 1fr; gap: 28px; padding: 27px 0; }
-    .row p { padding-top: 1px; }
-    .dock { display: none; }
-  }
-
-  @media (min-width: 940px) {
-    .bar-cta { display: inline-flex; }
-    .hero { padding: 76px 0 96px; }
-    .hero-grid { grid-template-columns: 1.18fr 0.82fr; gap: 60px; }
-    .chat { margin-left: auto; }
-    .section { padding: 80px 0; }
-    .close { padding: 88px 0 96px; }
-    h2 { margin-bottom: 40px; }
-  }
-</style>
-
-<script>
-  // Roda antes da pintura: so liga a animacao se o navegador tiver como executa-la.
-  (function () {
-    try {
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if ('IntersectionObserver' in window && !reduce) {
-        document.documentElement.classList.add('reveal-on', 'dock-armed');
-      }
-    } catch (e) { /* sem animacao, conteudo continua visivel */ }
-  })();
-</script>
-
-<div class="sentinel" id="top-sentinel"></div>
-
-<header class="bar" id="bar">
-  <div class="wrap bar-inner">
-    <div class="brand">
-      <span class="mark mark-lg"><img src="logo.jpg" alt="Símbolo da ORVION"></span>
-      <span class="wordmark">ORVION</span>
-    </div>
-    <a class="btn btn-sm bar-cta" href="https://wa.me/5511913039002?text=Oi%2C%20vim%20pelo%20site%20e%20queria%20testar%20o%20assistente" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.8 14.16c-.25.69-1.44 1.32-1.99 1.36-.53.04-1.02.23-3.45-.72-2.9-1.14-4.73-4.1-4.87-4.29-.14-.19-1.16-1.54-1.16-2.94 0-1.4.73-2.08 1-2.37.26-.29.57-.36.76-.36l.55.01c.18.01.41-.07.64.49.25.6.83 2.07.9 2.22.07.15.12.32.02.51-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.75 1.24 1.61 2.01 1.11.99 2.04 1.3 2.33 1.44.29.15.46.12.63-.07.17-.19.73-.85.93-1.15.19-.29.38-.24.64-.15.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.7-.17 1.39Z"/></svg>
-      Falar com o Orvi
-    </a>
-  </div>
-</header>
-
-<div class="wrap">
-  <section class="hero">
-    <div class="hero-grid">
-      <div>
-        <span class="eyebrow" data-reveal>Assistente comercial 24h</span>
-        <h1 data-reveal style="--i:1">Alguém responde seu cliente às 23h.</h1>
-        <p class="lede" data-reveal style="--i:2">
-          A ORVION instala um assistente no WhatsApp do seu negócio. Ele atende,
-          confere estoque e chama você quando precisa.
-        </p>
-        <div class="cta-block" data-reveal style="--i:3">
-          <div class="cta-row">
-            <a class="btn" href="https://wa.me/5511913039002?text=Oi%2C%20vim%20pelo%20site%20e%20queria%20testar%20o%20assistente" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.8 14.16c-.25.69-1.44 1.32-1.99 1.36-.53.04-1.02.23-3.45-.72-2.9-1.14-4.73-4.1-4.87-4.29-.14-.19-1.16-1.54-1.16-2.94 0-1.4.73-2.08 1-2.37.26-.29.57-.36.76-.36l.55.01c.18.01.41-.07.64.49.25.6.83 2.07.9 2.22.07.15.12.32.02.51-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.75 1.24 1.61 2.01 1.11.99 2.04 1.3 2.33 1.44.29.15.46.12.63-.07.17-.19.73-.85.93-1.15.19-.29.38-.24.64-.15.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.7-.17 1.39Z"/></svg>
-              Falar com o Orvi
-            </a>
-            <a class="btn btn-sm btn-quiet" href="#funciona">Ver como funciona</a>
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#080B12" />
+    <meta
+      name="description"
+      content="A ORVION melhora os pontos que conectam sua empresa aos clientes, da primeira visita ao contato comercial. Vamos analisar sua presença digital?"
+    />
+    <meta property="og:title" content="ORVION — Presença digital com direção" />
+    <meta
+      property="og:description"
+      content="Transforme uma presença dispersa em um caminho mais claro até o cliente. Tudo começa com uma conversa."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <title>ORVION — Presença digital com direção</title>
+    <link rel="icon" type="image/svg+xml" href="/brand/favicon.svg" />
+    <script type="module" crossorigin src="/assets/landing-Dk61ISOp.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+    <link rel="stylesheet" crossorigin href="/assets/landing-EoxzqdBc.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="#inicio" aria-label="ORVION, início"
+          ><img
+            src="/brand/logo-light.svg"
+            width="172"
+            height="31"
+            alt="ORVION"
+        /></a>
+        <nav id="navigation" aria-label="Navegação principal">
+          <a href="#como-funciona">Como funciona</a
+          ><a href="#analise">O que analisamos</a><a href="#contato">Contato</a>
+        </nav>
+        <a
+          class="button header-cta"
+          href="https://wa.me/5527999408858"
+          data-message="general"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Analisar presença digital <span aria-hidden="true">↗</span></a
+        >
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-controls="navigation"
+          aria-expanded="false"
+          aria-label="Abrir menu"
+        >
+          <span></span><span></span>
+        </button>
+      </div>
+    </header>
+    <main id="conteudo">
+      <section class="hero container" id="inicio" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">
+            <span class="tiny-line"></span> Presença digital
+          </p>
+          <h1 id="hero-title">
+            Sua presença digital está ajudando sua empresa a vender
+            <span class="muted">— ou apenas existindo?</span>
+          </h1>
+          <p class="hero-description">
+            A ORVION melhora os pontos que conectam sua empresa aos clientes, da
+            primeira visita ao contato comercial.
+          </p>
+          <div class="hero-actions">
+            <a
+              class="button primary"
+              href="https://wa.me/5527999408858"
+              data-message="diagnosis"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Analisar minha presença digital
+              <span aria-hidden="true">↗</span></a
+            ><a
+              class="text-link"
+              href="https://wa.me/5527999408858"
+              data-message="general"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Falar com a ORVION <span aria-hidden="true">↗</span></a
+            >
           </div>
-          <p class="cta-note">
-            Converse agora com o mesmo assistente que instalamos nos nossos clientes.
-            Sem cadastro, sem formulário.
+          <p class="microcopy">
+            Uma conversa inicial para entender onde existem oportunidades.
           </p>
         </div>
-      </div>
-
-      <div class="chat" data-reveal style="--i:4">
-        <div class="chat-head">
-          <span class="mark mark-sm"><img src="logo.jpg" alt=""></span>
-          <div class="chat-who">
-            <div class="chat-name">Ótica Vitória</div>
-            <div class="chat-status">respondido às 23h47</div>
+        <div
+          class="hero-art"
+          role="img"
+          aria-label="Canais dispersos se conectam à ORVION e formam um caminho até uma oportunidade."
+        >
+          <div class="art-grid"></div>
+          <svg
+            class="network"
+            viewBox="0 0 600 620"
+            fill="none"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id="line-fade">
+                <stop stop-color="#526176" stop-opacity=".15" />
+                <stop offset="1" stop-color="#526176" stop-opacity=".65" />
+              </linearGradient>
+            </defs>
+            <g class="connections" stroke="url(#line-fade)" stroke-width="1">
+              <path d="M54 138H138Q168 138 188 158L252 222" />
+              <path d="M10 312H172Q198 312 218 292L252 258" />
+              <path d="M80 487H130Q158 487 178 467L252 390V320" />
+              <path d="M366 244L412 198Q430 180 460 180H544" />
+              <path d="M365 300H444Q463 300 480 317L530 367" />
+              <path d="M328 333V422Q328 447 355 447H532" />
+            </g>
+            <g class="flow" stroke="#FF5A5F" stroke-width="1.5">
+              <path pathLength="100" d="M10 312H172Q198 312 218 292L252 258" />
+              <path pathLength="100" d="M328 333V422Q328 447 355 447H532" />
+            </g>
+            <g fill="#526176">
+              <circle cx="54" cy="138" r="3" />
+              <circle cx="10" cy="312" r="3" />
+              <circle cx="80" cy="487" r="3" />
+              <circle cx="544" cy="180" r="3" />
+              <circle cx="530" cy="367" r="3" />
+              <circle cx="115" cy="225" r="1.5" />
+              <circle cx="432" cy="91" r="1.5" />
+              <circle cx="437" cy="538" r="1.5" />
+            </g>
+            <circle
+              class="opportunity-halo"
+              cx="532"
+              cy="447"
+              r="14"
+              fill="#FF5A5F"
+              opacity=".08"
+            />
+            <circle cx="532" cy="447" r="4" fill="#FF5A5F" />
+          </svg>
+          <div class="hero-symbol">
+            <img
+              src="/brand/symbol-animated.svg"
+              alt=""
+              width="168"
+              height="171"
+            />
+          </div>
+          <div class="art-label label-visit">Uma visita</div>
+          <div class="art-label label-search">Uma busca</div>
+          <div class="art-label label-interest">Um interesse</div>
+          <div class="art-label label-clarity">Mais clareza</div>
+          <div class="art-label label-contact">Uma conversa</div>
+          <div class="art-label label-opportunity">Uma oportunidade</div>
+          <img
+            class="art-wordmark"
+            src="/brand/logo-light.svg"
+            width="145"
+            height="26"
+            alt=""
+          />
+          <div class="art-caption">
+            <span class="coral-dot"></span> Do disperso ao conectado.
           </div>
         </div>
-        <div class="thread">
-          <div class="bubble them">boa noite, vcs ainda tem a armação redonda dourada?</div>
-          <div class="bubble orvi">Boa noite. Tenho duas em estoque, sai por R$ 380. Quer que eu separe uma pra você?</div>
-          <div class="bubble them">quero sim</div>
+        <div class="hero-bottom">
+          <span>Presença com direção. Conexões com propósito.</span
+          ><a href="#presenca"
+            >Explore o caminho <span aria-hidden="true">↓</span></a
+          >
         </div>
-        <p class="chat-foot">Nesse ponto o dono da loja recebe o contato e o resumo da conversa.</p>
+      </section>
+      <section class="problem section" id="presenca">
+        <div class="container">
+          <div class="section-intro reveal">
+            <span class="section-index" aria-hidden="true"
+              >01 / O ponto de partida</span
+            >
+            <h2>
+              Estar online não é o mesmo que estar preparado para converter.
+            </h2>
+            <p>
+              Muitas empresas têm Instagram, site, WhatsApp e anúncios, mas cada
+              ponto funciona de forma isolada. O visitante chega, fica em dúvida
+              e desaparece antes de iniciar uma conversa.
+            </p>
+          </div>
+          <ol
+            class="journey"
+            aria-label="Caminho do visitante até a oportunidade"
+          >
+            <li class="reveal">
+              <span class="journey-number">01</span>
+              <h3>Visita</h3>
+              <p>Sua empresa é encontrada.</p>
+            </li>
+            <li class="reveal">
+              <span class="journey-number">02</span>
+              <h3>Clareza</h3>
+              <p>O valor fica evidente.</p>
+            </li>
+            <li class="reveal">
+              <span class="journey-number">03</span>
+              <h3>Contato</h3>
+              <p>A conversa tem um caminho.</p>
+            </li>
+            <li class="reveal">
+              <span class="journey-number final-dot">04</span>
+              <h3>Oportunidade</h3>
+              <p>O interesse pode avançar.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+      <section class="approach section container">
+        <div class="approach-title reveal">
+          <h2>
+            Nós organizamos a presença digital para ela
+            <span class="muted">trabalhar melhor.</span>
+          </h2>
+        </div>
+        <div class="approach-detail reveal">
+          <p>
+            Antes de recomendar qualquer solução, entendemos como sua empresa é
+            encontrada, como é percebida e o que acontece depois que alguém
+            demonstra interesse.
+          </p>
+          <div class="principles">
+            <span>Clareza</span><span>Estrutura</span><span>Conexão</span
+            ><span>Conversão</span><span>Acompanhamento</span>
+          </div>
+          <p class="small-note">O ponto de partida é o seu negócio.</p>
+        </div>
+      </section>
+      <section class="analysis section" id="analise">
+        <div class="container analysis-layout">
+          <div class="analysis-intro reveal">
+            <span class="section-index" aria-hidden="true"
+              >02 / Um olhar completo</span
+            >
+            <h2>O que<br />analisamos<span class="coral">.</span></h2>
+            <p>Quatro momentos. Um mesmo caminho até o cliente.</p>
+            <p class="small-note">
+              Explore cada ponto da sua presença digital.
+            </p>
+            <div class="analysis-mark" aria-hidden="true">
+              <img
+                loading="lazy"
+                src="/brand/symbol-mono.svg"
+                width="140"
+                height="143"
+                alt=""
+              />
+            </div>
+          </div>
+          <div class="analysis-options">
+            <details class="analysis-item reveal" open>
+              <summary>
+                <span class="option-number">01</span
+                ><span>Como as pessoas encontram sua empresa.</span
+                ><span class="plus" aria-hidden="true"></span>
+              </summary>
+              <div class="analysis-body">
+                <p>
+                  O caminho começa antes do site. Observamos como sua empresa
+                  aparece nos canais de busca, nas redes e nas indicações, e
+                  para onde cada visita é direcionada.
+                </p>
+                <span>Ser encontrado é o primeiro passo.</span>
+              </div>
+            </details>
+            <details class="analysis-item reveal">
+              <summary>
+                <span class="option-number">02</span
+                ><span>O que entendem quando chegam.</span
+                ><span class="plus" aria-hidden="true"></span>
+              </summary>
+              <div class="analysis-body">
+                <p>
+                  A mensagem precisa fazer sentido para quem chega. Analisamos a
+                  clareza da proposta, a organização da página e as informações
+                  que ajudam o visitante a confiar na sua empresa.
+                </p>
+                <span>Clareza para reconhecer o seu valor.</span>
+              </div>
+            </details>
+            <details class="analysis-item reveal">
+              <summary>
+                <span class="option-number">03</span
+                ><span>Como iniciam o contato.</span
+                ><span class="plus" aria-hidden="true"></span>
+              </summary>
+              <div class="analysis-body">
+                <p>
+                  Entre o interesse e a conversa, qualquer atrito pesa.
+                  Avaliamos chamadas, formulários e o caminho até o WhatsApp
+                  para tornar o próximo passo simples e evidente.
+                </p>
+                <span>Menos dúvidas sobre como avançar.</span>
+              </div>
+            </details>
+            <details class="analysis-item reveal">
+              <summary>
+                <span class="option-number">04</span
+                ><span>O que acontece depois do primeiro contato.</span
+                ><span class="plus" aria-hidden="true"></span>
+              </summary>
+              <div class="analysis-body">
+                <p>
+                  O trabalho continua quando a mensagem chega. Entendemos como o
+                  atendimento acolhe, organiza e acompanha cada interesse, e
+                  onde inteligência e automação podem apoiar a equipe.
+                </p>
+                <span>Continuidade para uma boa conversa.</span>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+      <section class="process section container" id="como-funciona">
+        <div class="process-intro reveal">
+          <h2>
+            Começamos entendendo.<br /><span class="muted"
+              >Depois construímos o que faz sentido.</span
+            >
+          </h2>
+          <p>
+            Decisões orientadas pelo seu momento, do diagnóstico à evolução.
+          </p>
+          <a
+            class="text-link"
+            href="https://wa.me/5527999408858"
+            data-message="general"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Vamos conversar <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <ol class="timeline">
+          <li class="reveal">
+            <span>01</span>
+            <div>
+              <h3>Conversa inicial</h3>
+              <p>
+                Entendemos o negócio, o público e onde surgem as oportunidades.
+              </p>
+            </div>
+          </li>
+          <li class="reveal">
+            <span>02</span>
+            <div>
+              <h3>Leitura da presença atual</h3>
+              <p>
+                Observamos os pontos de contato e os atritos no caminho até a
+                conversa.
+              </p>
+            </div>
+          </li>
+          <li class="reveal">
+            <span>03</span>
+            <div>
+              <h3>Estrutura recomendada</h3>
+              <p>Definimos o que precisa ser melhorado e em que ordem.</p>
+            </div>
+          </li>
+          <li class="reveal">
+            <span>04</span>
+            <div>
+              <h3>Implementação</h3>
+              <p>Construímos e conectamos as partes necessárias.</p>
+            </div>
+          </li>
+          <li class="reveal">
+            <span>05</span>
+            <div>
+              <h3>Evolução</h3>
+              <p>
+                Acompanhamos o que pode ser ajustado para a presença continuar
+                trabalhando melhor.
+              </p>
+            </div>
+          </li>
+        </ol>
+      </section>
+      <section class="solution section">
+        <div class="container">
+          <div class="solution-intro reveal">
+            <h2>A solução muda<br />conforme o problema.</h2>
+            <p>
+              Em alguns casos, o principal gargalo está na página. Em outros,
+              está no atendimento, na captação ou no acompanhamento. A ORVION
+              combina os elementos necessários para construir uma presença
+              digital mais coerente com o objetivo do negócio.
+            </p>
+          </div>
+          <div
+            class="solution-map reveal"
+            aria-label="Presença, página, contato, inteligência, automação e acompanhamento conectados ao objetivo do negócio"
+          >
+            <div class="map-top">
+              <span>Presença</span><span>Página</span><span>Contato</span>
+            </div>
+            <div class="map-center">
+              <span class="coral-dot"></span> O objetivo do seu negócio
+            </div>
+            <div class="map-bottom">
+              <span>Inteligência</span><span>Automação</span
+              ><span>Acompanhamento</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="contact section container" id="contato">
+        <span class="eyebrow reveal"
+          ><span class="tiny-line"></span> O próximo passo começa aqui</span
+        >
+        <h2 class="reveal">
+          Vamos descobrir onde sua presença digital pode
+          <span class="muted">trabalhar melhor?</span>
+        </h2>
+        <p class="reveal">
+          Conte um pouco sobre sua empresa e vamos identificar os próximos
+          passos.
+        </p>
+        <div class="contact-actions reveal">
+          <a
+            class="button primary"
+            href="https://wa.me/5527999408858"
+            data-message="diagnosis"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Quero analisar minha presença digital
+            <span aria-hidden="true">↗</span></a
+          ><a
+            class="text-link"
+            href="https://wa.me/5527999408858"
+            data-message="general"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Falar pelo WhatsApp <span aria-hidden="true">↗</span></a
+          >
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer container">
+      <div class="footer-main">
+        <a class="brand" href="#inicio" aria-label="ORVION, início"
+          ><img
+            loading="lazy"
+            src="/brand/logo-light.svg"
+            width="172"
+            height="31"
+            alt="ORVION"
+        /></a>
+        <p>Presença digital que conecta<br />sua empresa às oportunidades.</p>
+        <a
+          class="text-link"
+          href="https://wa.me/5527999408858"
+          target="_blank"
+          rel="noopener noreferrer"
+          >+55 27 99940-8858 <span aria-hidden="true">↗</span></a
+        >
       </div>
-    </div>
-  </section>
-
-  <section class="section" id="funciona">
-    <h2 data-reveal>O que ele faz pelo seu negócio</h2>
-    <div class="rows">
-      <div class="row" data-reveal>
-        <h3>Responde na hora, a qualquer hora</h3>
-        <p>Horário, endereço, formas de pagamento, condições de entrega. O cliente não fica esperando até a manhã seguinte para saber se vale a pena ir até você.</p>
+      <div class="footer-bottom">
+        <span
+          >© <span id="year">2026</span> ORVION. Todos os direitos
+          reservados.</span
+        >
+        <div>
+          <a href="#como-funciona">Como funciona</a
+          ><a href="#analise">O que analisamos</a
+          ><a href="#inicio">Voltar ao início ↑</a>
+        </div>
       </div>
-      <div class="row" data-reveal style="--i:1">
-        <h3>Confere antes de afirmar</h3>
-        <p>Nunca diz que tem uma peça sem consultar sua base de estoque. Quando não sabe, avisa que vai confirmar em vez de inventar uma resposta.</p>
-      </div>
-      <div class="row" data-reveal style="--i:2">
-        <h3>Sai de cena quando você entra</h3>
-        <p>No instante em que você começa a digitar, ele para de responder. Nada de dois atendimentos falando com o mesmo cliente ao mesmo tempo.</p>
-      </div>
-      <div class="row" data-reveal style="--i:3">
-        <h3>Avisa quando o cliente está pronto</h3>
-        <p>Quando alguém demonstra interesse real de compra, você recebe o contato e o resumo do que foi conversado, sem precisar ler tudo.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" style="padding-top:0">
-    <div class="panel" data-reveal>
-      <h2>Negócio pequeno não pode perder venda por falta de gente disponível.</h2>
-      <p>
-        A ORVION dá a lojas e prestadores a mesma presença constante que costuma ser
-        privilégio de empresa grande. Sem contratar mais ninguém e sem passar a noite
-        de olho no celular.
-      </p>
-    </div>
-  </section>
-
-  <section class="close">
-    <h2 data-reveal>Teste agora, pelo WhatsApp</h2>
-    <p class="lede" data-reveal style="--i:1">
-      Mande uma mensagem para o Orvi e veja como ele atende. É o mesmo assistente
-      que instalamos nos nossos clientes.
-    </p>
-    <div class="cta-row" data-reveal style="--i:2">
-      <a class="btn" href="https://wa.me/5511913039002?text=Oi%2C%20vim%20pelo%20site%20e%20queria%20testar%20o%20assistente" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.8 14.16c-.25.69-1.44 1.32-1.99 1.36-.53.04-1.02.23-3.45-.72-2.9-1.14-4.73-4.1-4.87-4.29-.14-.19-1.16-1.54-1.16-2.94 0-1.4.73-2.08 1-2.37.26-.29.57-.36.76-.36l.55.01c.18.01.41-.07.64.49.25.6.83 2.07.9 2.22.07.15.12.32.02.51-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.75 1.24 1.61 2.01 1.11.99 2.04 1.3 2.33 1.44.29.15.46.12.63-.07.17-.19.73-.85.93-1.15.19-.29.38-.24.64-.15.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.7-.17 1.39Z"/></svg>
-        Falar com o Orvi
-      </a>
-    </div>
-    <p class="phone" data-reveal style="--i:3">+55 11 91303-9002</p>
-  </section>
-
-  <footer>
-    <div class="foot-row">
-      <div class="foot-brand">
-        <span class="mark mark-xs"><img src="logo.jpg" alt=""></span>
-        <span class="foot-word">ORVION</span>
-      </div>
-      <p class="foot-tag">Assistente comercial para negócios que vendem pelo WhatsApp.</p>
-    </div>
-  </footer>
-</div>
-
-<div class="dock" id="dock">
-  <a class="btn" href="https://wa.me/5511913039002?text=Oi%2C%20vim%20pelo%20site%20e%20queria%20testar%20o%20assistente" target="_blank" rel="noopener">
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.8 14.16c-.25.69-1.44 1.32-1.99 1.36-.53.04-1.02.23-3.45-.72-2.9-1.14-4.73-4.1-4.87-4.29-.14-.19-1.16-1.54-1.16-2.94 0-1.4.73-2.08 1-2.37.26-.29.57-.36.76-.36l.55.01c.18.01.41-.07.64.49.25.6.83 2.07.9 2.22.07.15.12.32.02.51-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.75 1.24 1.61 2.01 1.11.99 2.04 1.3 2.33 1.44.29.15.46.12.63-.07.17-.19.73-.85.93-1.15.19-.29.38-.24.64-.15.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.12.07.7-.17 1.39Z"/></svg>
-    Falar com o Orvi
-  </a>
-</div>
-
-<script>
-  (function () {
-    var root = document.documentElement;
-    var bar = document.getElementById('bar');
-    var dock = document.getElementById('dock');
-    var armed = root.classList.contains('reveal-on');
-
-    // esconde a barra fixa enquanto o topo esta a vista
-    if (root.classList.contains('dock-armed') && dock) dock.classList.add('tucked');
-
-    function revealAll() {
-      var all = document.querySelectorAll('[data-reveal]');
-      for (var i = 0; i < all.length; i++) all[i].classList.add('seen');
-    }
-
-    if (!armed) return; // conteudo ja esta visivel pelo CSS
-
-    var items = document.querySelectorAll('[data-reveal]');
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('seen');
-          io.unobserve(entry.target);
-        }
-      });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-    items.forEach(function (el) { io.observe(el); });
-
-    // rede de seguranca: se por qualquer motivo o observer nao entregar,
-    // o conteudo aparece assim mesmo em vez de ficar invisivel para sempre
-    setTimeout(revealAll, 1800);
-
-    // cabecalho e barra fixa, sem listener de scroll
-    var sentinel = document.getElementById('top-sentinel');
-    if (sentinel) {
-      var io2 = new IntersectionObserver(function (entries) {
-        var atTop = entries[0].isIntersecting;
-        if (bar) bar.classList.toggle('stuck', !atTop);
-        if (dock) dock.classList.toggle('tucked', atTop);
-      }, { threshold: 0 });
-      io2.observe(sentinel);
-    }
-  })();
-</script>
+    </footer>
+  </body>
+</html>

@@ -1,26 +1,27 @@
-# ORVION — landing page
+# ORVION — publicação da landing
 
-Página institucional da ORVION. HTML estático, sem build e sem dependências.
+Site: https://orvion-landing.netlify.app/
 
-## Publicar na Netlify
+Este repositório contém a exportação estática da landing institucional.
+Código-fonte, testes e documentação: https://github.com/guiizao14/orvion
+Commit de origem: 88ba4f1
 
-**Opção 1, conectando este repositório:**
-1. Netlify → Add new site → Import an existing project
-2. Escolha este repositório
-3. Build command: deixe vazio
-4. Publish directory: `.`
+## Atualizar
 
-**Opção 2, sem Git:** arraste esta pasta inteira em app.netlify.com/drop
+1. No repositório `orvion`, execute `pnpm install --frozen-lockfile` e `pnpm build:landing`.
+2. Execute a validação descrita em `landing/README.md` daquele repositório.
+3. Sincronize o conteúdo de `dist/landing-site/` com a raiz deste repositório.
+4. Faça commit e push para `main`. A conexão existente do Netlify publica os arquivos.
 
-## Estrutura
+Configuração preservada: sem comando de build, diretório de publicação `.`.
+Não é necessário domínio próprio nem serviço pago adicional.
 
-```
-index.html   página completa (CSS e JS embutidos)
-logo.jpg     símbolo da marca, usado no cabeçalho, no card e no rodapé
-```
+## Arquivos
 
-## Editar
+- `index.html`: landing compilada.
+- `assets/`: CSS, JavaScript leve e fontes locais.
+- `brand/`: versões vetoriais da identidade ORVION, símbolo animado e favicon.
+- `logo.jpg`: referência histórica preservada; não é usada na nova página.
 
-O botão de WhatsApp aponta para o número comercial. Para trocar, procure
-por `wa.me/` no `index.html` (aparece em 4 lugares: cabeçalho, hero,
-fechamento e barra fixa do celular).
+O dashboard e as integrações permanecem no repositório de origem, fora desta publicação.
+WhatsApp oficial: https://wa.me/5527999408858

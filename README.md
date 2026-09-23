@@ -4,7 +4,7 @@ Site: https://orvion-landing.netlify.app/
 
 Este repositório contém a exportação estática da landing institucional.
 Código-fonte, testes e documentação: https://github.com/guiizao14/orvion
-Commit de origem: 88ba4f1
+Commit de origem: 0d676ab
 
 ## Atualizar
 
